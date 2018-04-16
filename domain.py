@@ -1,21 +1,6 @@
-def load_conll_file(file):
-    f = open(file)
-    sentences = []
-    tokens = [Token.get_root_token()]
-    for line in f.readlines():
-        # remove the new line char first
-        line = line.strip()
-        if line == "":
-            # the sentence has ended
-            sentences.append(tokens)
-            tokens = [Token.get_root_token()]
-            print tokens[0]
-        else:
-            token = Token(line)
-            print token
-            tokens.append(token)
-    return sentences
-
+"""
+An object containing the information about a single word in a sentence.
+"""
 class Token():
     delimiter = '\t'
     
@@ -37,4 +22,18 @@ class Token():
     
     @staticmethod
     def get_root_token():
-        return Token("0\t<ROOT>\t<ROOT>\t<ROOT>\t_\t_\t-1\tROOT\t_\t_") 
+        return Token("0\t<ROOT>\t<ROOT>\t<ROOT>\t_\t_\t-1\tROOT\t_\t_")
+
+
+"""
+A sentence has an array of Tokens
+"""
+class Sentence():
+    def __init__(self, tokens):
+        self.tokens = tokens
+    
+    def __str__(self):
+        string = ""
+        for token in self.tokens:
+            string += str(token) + "\n"
+        return string.strip()

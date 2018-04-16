@@ -1,5 +1,5 @@
 import argparse
-import read
+import io
 
 
 if __name__ == '__main__':
@@ -11,4 +11,6 @@ if __name__ == '__main__':
     # parser.add_argument('-c', action="store", dest="c", type=int)
     args = parser.parse_args()
 
-    read.load_conll_file(args.train_file)
+    for sentence in io.load_conll_file(args.train_file):
+        print sentence
+        print "---"
