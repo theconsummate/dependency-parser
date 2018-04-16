@@ -1,5 +1,6 @@
 # my gitignore
 data/*
+slides/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
