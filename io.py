@@ -15,3 +15,10 @@ def load_conll_file(file):
             token = Token(line)
             tokens.append(token)
     return sentences
+
+
+def write_conll_file(file, sentences):
+    f = open(file, 'w')
+    for sentence in sentences:
+        f.write(sentence.print_conll_format() + "\n\n")
+    f.close()

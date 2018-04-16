@@ -11,6 +11,7 @@ if __name__ == '__main__':
     # parser.add_argument('-c', action="store", dest="c", type=int)
     args = parser.parse_args()
 
-    for sentence in io.load_conll_file(args.train_file):
-        print sentence
-        print "---"
+    # for sentence in io.load_conll_file(args.train_file):
+    #     print sentence.print_conll_format()
+    #     print "---"
+    io.write_conll_file("out.conll", io.load_conll_file(args.train_file))

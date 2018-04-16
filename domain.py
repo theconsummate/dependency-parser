@@ -20,6 +20,9 @@ class Token():
     def __str__(self):
         return "{id=" + str(self.id) + ",form=" + self.form + ",head=" + str(self.head) + ",deprel=" + self.deprel + "}"
     
+    def print_conll_format(self):
+        return str(self.id) + "\t" + self.form + "\t" + self.lemma + "\t" + self.upos + "\t" + self.xpos + "\t" + self.feats + "\t" + str(self.head) + "\t" + self.deprel + "\t" + self.deps + "\t" + self.misc
+    
     @staticmethod
     def get_root_token():
         return Token("0\t<ROOT>\t<ROOT>\t<ROOT>\t_\t_\t-1\tROOT\t_\t_")
@@ -36,4 +39,10 @@ class Sentence():
         string = ""
         for token in self.tokens:
             string += str(token) + "\n"
+        return string.strip()
+    
+    def print_conll_format(self):
+        string = ""
+        for token in self.tokens[1:]:
+            string += token.print_conll_format() + "\n"
         return string.strip()
