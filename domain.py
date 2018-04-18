@@ -1,3 +1,6 @@
+
+SHIFT = 0; RIGHT = 1; LEFT = 2;
+ACTIONS = (SHIFT, RIGHT, LEFT)
 """
 An object containing the information about a single word in a sentence.
 """
@@ -50,34 +53,79 @@ class Sentence():
 
 class State():
     """
-    n is the size of the sentence including the root
+    n is the size of the sentence including the root. 0 is the root index and after that is the sentence.
     """
     def __init__(self, n):
         self.n = n
-        self.heads = [None] * (n)
-        self.labels = [None] * (n)
+        # init buffer with all tokens including root
+        self.buffer = range(n)
+        # pop the first root token
+        self.buffer.pop(0)
+        # init stack and add root token to it
+        self.stack = [0]
+        # arrays of size n for heads and labels
+        self.heads = [None] * (n - 1)
+        self.labels = [None] * (n - 1)
         self.lefts = []
         self.rights = []
     
 
-    def __add__(self, head, child, label=None):
-        self.heads[child] = head
-        self.labels[child] = label
+    def __add__(self, head, dependent, label=None):
+        self.heads[dependent] = head
+        self.labels[dependent] = label
     
+
+    """
+    pop the first element of the buffer and add it to the stack.
+    """
+    def shift(self):
+        # buffer should have atleast 2 elements or stack is empty
+        if len(self.buffer) < 1 and len(self.stack) > 0:
+            raise ValueError('State#shift: buffer should have atleast 2 elements when stack is not empty')
+        self.stack.append(self.buffer.pop(0))
     
-    def doShift():
-        pass
+    def addLeftArc(self, head, dependent, label=None):
+        # arc is from head to dependent
+        # dependent < head required
+        if head < dependent:
+            raise ValueError('State#addLeftArc: head index should be less than the dependent index')
+        self.rights[head].append(dependent)
+        self.__add__(self, head, dependent, label)
     
-    def addLeftArc(self, head, child, label=None):
-        # head < child required
-        if head > child:
-            raise ValueError('State#addLeftArc: head index should be less than the child index')
-        self.rights[head].append(child)
-        self.__add__(self, head, child, label)
+    def addRightArc(self, head, dependent, label=None):
+        # arc is from head to dependent
+        # head < dependent required
+        if head > dependent:
+            raise ValueError('State#addRightArc: head index should be more than the dependent index')
+        self.lefts[head].append(dependent)
+        self.__add__(self, head, dependent, label)
     
-    def addRightArc(self, head, child, label=None):
-        # head > child required
-        if head < child:
-            raise ValueError('State#addRightArc: head index should be more than the child index')
-        self.lefts[head].append(child)
-        self.__add__(self, head, child, label)
+    def arc_standard_oracle(self, stack_top, buffer_top):
+        if heads[stack_top] == buffer_top:
+            return LEFT
+        elif heads[buffer_top] == stack_top:
+            return RIGHT
+        else:
+            return SHIFT
+    
+    def arc_standard_transition(self, action):
+        if action == LEFT:
+            # pop the last element of stack and add an arc.
+            if self.stack[-1] == 0:
+                # top of stack is root
+                raise ValueError("State#arc_standard_transition:top of stack is root, can not create left arc")
+            addLeftArc(self, self.stack.pop(), self.buffer[0])
+        elif action == LEFT:
+            # pop the last element of stack and first element of the buffer and add an arc.
+            stack_top = self.stack.pop()
+            addRightArc(self, self.stack.pop(), self.buffer.pop(0))
+            # add the stack_top to the first position in the buffer
+            self.buffer.insert(0, stack_top)
+        else:
+            shift(self)
+    
+
+    def is_terminal(self):
+        if len(self.buffer) == 0:
+            return True
+        return False

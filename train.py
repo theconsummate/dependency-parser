@@ -6,8 +6,6 @@ from features import extract_features
 def trainEach(sentence):
     # number of tokens in the sentence
     n = len(sentence.tokens)
-    # add root element to the buffer
-    buffer = [0]
     state = State(n)
     while stack or (i+1) < n:
         features = extract_features()
