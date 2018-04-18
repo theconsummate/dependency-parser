@@ -1,6 +1,9 @@
 import argparse
 import io
 
+def trainEach(sentence):
+    pass
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -14,4 +17,8 @@ if __name__ == '__main__':
     # for sentence in io.load_conll_file(args.train_file):
     #     print sentence.print_conll_format()
     #     print "---"
-    io.write_conll_file("out.conll", io.load_conll_file(args.train_file))
+    sentences = io.load_conll_file(args.train_file)
+    # io.write_conll_file("out.conll", sentences)
+
+    for sentence in sentences:
+        trainEach(sentence)

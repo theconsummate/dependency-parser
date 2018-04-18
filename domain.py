@@ -46,3 +46,8 @@ class Sentence():
         for token in self.tokens[1:]:
             string += token.print_conll_format() + "\n"
         return string.strip()
+
+
+class State():
+    def __init__(self):
+        pass
