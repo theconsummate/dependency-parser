@@ -49,5 +49,35 @@ class Sentence():
 
 
 class State():
-    def __init__(self):
+    """
+    n is the size of the sentence including the root
+    """
+    def __init__(self, n):
+        self.n = n
+        self.heads = [None] * (n)
+        self.labels = [None] * (n)
+        self.lefts = []
+        self.rights = []
+    
+
+    def __add__(self, head, child, label=None):
+        self.heads[child] = head
+        self.labels[child] = label
+    
+    
+    def doShift():
         pass
+    
+    def addLeftArc(self, head, child, label=None):
+        # head < child required
+        if head > child:
+            raise ValueError('State#addLeftArc: head index should be less than the child index')
+        self.rights[head].append(child)
+        self.__add__(self, head, child, label)
+    
+    def addRightArc(self, head, child, label=None):
+        # head > child required
+        if head < child:
+            raise ValueError('State#addRightArc: head index should be more than the child index')
+        self.lefts[head].append(child)
+        self.__add__(self, head, child, label)
