@@ -2,13 +2,42 @@ import argparse
 import io
 from domain import State
 from features import extract_features
+from classifier import Perceptron
 
-def trainEach(sentence):
-    # number of tokens in the sentence
-    n = len(sentence.tokens)
-    state = State(n)
-    while stack or (i+1) < n:
-        features = extract_features()
+SHIFT = 0; RIGHT = 1; LEFT = 2;
+ACTIONS = (SHIFT, RIGHT, LEFT)
+
+def train(sentences):
+    # init Perceptron
+    perceptron = Perceptron()
+
+    print("training starting...")
+
+    for sentence in sentences:
+        # number of tokens in the sentence
+        n = len(sentence.tokens)
+        state = State(n)
+        # set the gold heads
+        # skip the root token while calling this function.
+        state.set_gold_heads(tokens[1:])
+        # keep looping till parsing is complete
+
+        while not state.is_terminal:
+            features = extract_features(state)
+            # get the next gold move
+            gold = state.get_gold_move_from_oracle()
+            # learn the next move for current state
+            perceptron.learn(features, gold)
+            # apply the gold move to get the new state
+            state.arc_standard_transition(gold)
+
+
+    # training is finished
+    print("training finished")
+
+    # save the model
+    perceptron.save("model.pickle")
+    print("model saved")
 
 
 if __name__ == '__main__':
@@ -26,5 +55,4 @@ if __name__ == '__main__':
     sentences = io.load_conll_file(args.train_file)
     # io.write_conll_file("out.conll", sentences)
 
-    for sentence in sentences:
-        trainEach(sentence)
+    train(sentences)

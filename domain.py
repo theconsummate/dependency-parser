@@ -6,7 +6,7 @@ An object containing the information about a single word in a sentence.
 """
 class Token():
     delimiter = '\t'
-    
+
     def __init__(self, line):
         items = line.split(self.delimiter)
         self.id = int(items[0])
@@ -19,13 +19,13 @@ class Token():
         self.deprel = items[7]
         self.deps = items[8] # not in use
         self.misc = items[9] # not in use
-    
+
     def __str__(self):
         return "{id=" + str(self.id) + ",form=" + self.form + ",head=" + str(self.head) + ",deprel=" + self.deprel + "}"
-    
+
     def print_conll_format(self):
         return str(self.id) + "\t" + self.form + "\t" + self.lemma + "\t" + self.upos + "\t" + self.xpos + "\t" + self.feats + "\t" + str(self.head) + "\t" + self.deprel + "\t" + self.deps + "\t" + self.misc
-    
+
     @staticmethod
     def get_root_token():
         return Token("0\t<ROOT>\t<ROOT>\t<ROOT>\t_\t_\t-1\tROOT\t_\t_")
@@ -37,13 +37,13 @@ A sentence has an array of Tokens
 class Sentence():
     def __init__(self, tokens):
         self.tokens = tokens
-    
+
     def __str__(self):
         string = ""
         for token in self.tokens:
             string += str(token) + "\n"
         return string.strip()
-    
+
     def print_conll_format(self):
         string = ""
         for token in self.tokens[1:]:
@@ -68,12 +68,17 @@ class State():
         self.labels = [None] * (n - 1)
         self.lefts = []
         self.rights = []
-    
+
 
     def __add__(self, head, dependent, label=None):
         self.heads[dependent] = head
         self.labels[dependent] = label
-    
+
+
+    def set_gold_heads(tokens):
+        # it is assumed that this tokens array does not have the root token
+        for i in range(len(tokens)):
+            heads[i] = tokens[i].head
 
     """
     pop the first element of the buffer and add it to the stack.
@@ -83,7 +88,7 @@ class State():
         if len(self.buffer) < 1 and len(self.stack) > 0:
             raise ValueError('State#shift: buffer should have atleast 2 elements when stack is not empty')
         self.stack.append(self.buffer.pop(0))
-    
+
     def addLeftArc(self, head, dependent, label=None):
         # arc is from head to dependent
         # dependent < head required
@@ -91,7 +96,7 @@ class State():
             raise ValueError('State#addLeftArc: head index should be less than the dependent index')
         self.rights[head].append(dependent)
         self.__add__(self, head, dependent, label)
-    
+
     def addRightArc(self, head, dependent, label=None):
         # arc is from head to dependent
         # head < dependent required
@@ -99,7 +104,7 @@ class State():
             raise ValueError('State#addRightArc: head index should be more than the dependent index')
         self.lefts[head].append(dependent)
         self.__add__(self, head, dependent, label)
-    
+
     def arc_standard_oracle(self, stack_top, buffer_top):
         if heads[stack_top] == buffer_top:
             return LEFT
@@ -107,7 +112,13 @@ class State():
             return RIGHT
         else:
             return SHIFT
-    
+
+
+    def get_gold_move_from_oracle(self):
+        if len(self.stack) == 0:
+            return SHIFT
+        arc_standard_oracle(self, self.stack[-1], self.buffer[0])
+
     def arc_standard_transition(self, action):
         if action == LEFT:
             # pop the last element of stack and add an arc.
@@ -123,7 +134,7 @@ class State():
             self.buffer.insert(0, stack_top)
         else:
             shift(self)
-    
+
 
     def is_terminal(self):
         if len(self.buffer) == 0:
