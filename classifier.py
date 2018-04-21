@@ -18,6 +18,9 @@ class Perceptron():
 
     def update_weights(cl, features, add = True):
         for feature, value in features.items():
+            # add this feature to our weights if it was not present before
+            if feature not in self.weights[cl]:
+                    self.weights[cl][feature] = 0.1
             if add:
                 self.weights[cl][feature] += value
             else:
@@ -33,6 +36,9 @@ class Perceptron():
         for cl in self.classes:
             sc = 0
             for feature, value in features.items():
+                # add this feature to our weights if it was not present before
+                if feature not in self.weights[cl]:
+                    self.weights[cl][feature] = 0.1
                 sc += self.weights[cl][feature] * value
             if classs == -1 or sc > max_score:
                 max_score = sc
