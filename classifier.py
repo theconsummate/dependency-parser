@@ -1,4 +1,4 @@
-
+import pickle
 """
 A perceptron classifier
 """
@@ -49,3 +49,12 @@ class Perceptron():
         if not prediction == gold:
             update_weights(gold, features, True)
             update_weights(prediction, features, False)
+
+
+    def save(self, path):
+        print "Saving model to %s" % path
+        pickle.dump(self.weights, open(path, 'w'))
+
+
+    def load(self, path):
+        self.weights = pickle.load(open(path))

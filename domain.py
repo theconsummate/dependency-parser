@@ -117,7 +117,7 @@ class State():
     def get_gold_move_from_oracle(self):
         if len(self.stack) == 0:
             return SHIFT
-        arc_standard_oracle(self, self.stack[-1], self.buffer[0])
+        return arc_standard_oracle(self, self.stack[-1], self.buffer[0])
 
     def arc_standard_transition(self, action):
         if action == LEFT:
