@@ -3,20 +3,23 @@ import pickle
 A perceptron classifier
 """
 class Perceptron():
-    def __init__(self, features_array = [], classes = None):
+    def __init__(self, classes = None):
         self.classes = classes
-        init_weights()
+        self.weights = {}
+        for cl in self.classes:
+            self.weights[cl] = {}
+        # init_weights(self)
 
     """
     self.weight looks like {"SHIFT":{"f1":0.1, ...}, "LEFT":{...}, "RIGHT":{...}}
     """
-    def init_weights(features_array, bias = 0.1):
-        self.weights = {}
-        for feature in features_array:
-            for cl in self.classes:
-                self.weights[cl][feature] = 0.1
+    # def init_weights(features_array, bias = 0.1):
+    #     self.weights = {}
+    #     for feature in features_array:
+    #         for cl in self.classes:
+    #             self.weights[cl][feature] = 0.1
 
-    def update_weights(cl, features, add = True):
+    def update_weights(self, cl, features, add = True):
         for feature, value in features.items():
             # add this feature to our weights if it was not present before
             if feature not in self.weights[cl]:
@@ -30,7 +33,7 @@ class Perceptron():
     calculate dot product of given feature vector model with current weights.
     features is a dict of feature name and value
     """
-    def predicted_class(features):
+    def predicted_class(self, features):
         classs = -1
         max_score = 0
         for cl in self.classes:
@@ -51,10 +54,10 @@ class Perceptron():
     features is a dict of features and their corresponding values.
     """
     def learn(self, features, gold):
-        prediction = predicted_class(features)
+        prediction = self.predicted_class(features)
         if not prediction == gold:
-            update_weights(gold, features, True)
-            update_weights(prediction, features, False)
+            self.update_weights(gold, features, True)
+            self.update_weights(prediction, features, False)
 
 
     def save(self, path):

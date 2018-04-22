@@ -75,10 +75,10 @@ class State():
         self.labels[dependent] = label
 
 
-    def set_gold_heads(tokens):
+    def set_gold_heads(self, tokens):
         # it is assumed that this tokens array does not have the root token
         for i in range(len(tokens)):
-            heads[i] = tokens[i].head
+            self.heads[i] = tokens[i].head
 
     """
     pop the first element of the buffer and add it to the stack.
@@ -106,9 +106,9 @@ class State():
         self.__add__(self, head, dependent, label)
 
     def arc_standard_oracle(self, stack_top, buffer_top):
-        if heads[stack_top] == buffer_top:
+        if self.heads[stack_top] == buffer_top:
             return LEFT
-        elif heads[buffer_top] == stack_top:
+        elif self.heads[buffer_top] == stack_top:
             return RIGHT
         else:
             return SHIFT
@@ -117,7 +117,7 @@ class State():
     def get_gold_move_from_oracle(self):
         if len(self.stack) == 0:
             return SHIFT
-        return arc_standard_oracle(self, self.stack[-1], self.buffer[0])
+        return self.arc_standard_oracle(self.stack[-1], self.buffer[0])
 
     def arc_standard_transition(self, action):
         if action == LEFT:
@@ -133,7 +133,7 @@ class State():
             # add the stack_top to the first position in the buffer
             self.buffer.insert(0, stack_top)
         else:
-            shift(self)
+            self.shift()
 
 
     def is_terminal(self):

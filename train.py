@@ -9,7 +9,7 @@ ACTIONS = (SHIFT, RIGHT, LEFT)
 
 def train(sentences):
     # init Perceptron
-    perceptron = Perceptron()
+    perceptron = Perceptron(ACTIONS)
 
     print("training starting...")
 
@@ -19,11 +19,12 @@ def train(sentences):
         state = State(n)
         # set the gold heads
         # skip the root token while calling this function.
-        state.set_gold_heads(tokens[1:])
+        print("setting gold heads")
+        state.set_gold_heads(sentence.tokens[1:])
         # keep looping till parsing is complete
 
-        while not state.is_terminal:
-            features = extract_features(state)
+        while not state.is_terminal():
+            features = extract_features(state, sentence.tokens)
             # get the next gold move
             gold = state.get_gold_move_from_oracle()
             # learn the next move for current state
