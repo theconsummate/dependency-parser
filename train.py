@@ -7,6 +7,8 @@ from classifier import Perceptron
 SHIFT = 0; RIGHT = 1; LEFT = 2;
 ACTIONS = (SHIFT, RIGHT, LEFT)
 
+MODEL_FILENAME = "model.pickle"
+
 def train(sentences):
     # init Perceptron
     perceptron = Perceptron(ACTIONS)
@@ -37,8 +39,28 @@ def train(sentences):
     print("training finished")
 
     # save the model
-    perceptron.save("model.pickle")
+    perceptron.save(MODEL_FILENAME)
     print("model saved")
+
+
+def parse(sentences):
+    # load model
+    perceptron = Perceptron(ACTIONS)
+    perceptron.load(MODEL_FILENAME)
+
+    for sentence in sentences:
+        n = len(sentence.tokens)
+        state = State(n)
+
+        while not state.is_terminal():
+            features = extract_features(state, sentence.tokens)
+            # get action from model
+            action = perceptron.predicted_class(features)
+            print action
+            state.arc_standard_transition(action)
+
+        # print state.heads
+
 
 
 if __name__ == '__main__':
@@ -56,4 +78,5 @@ if __name__ == '__main__':
     sentences = io.load_conll_file(args.train_file)
     # io.write_conll_file("out.conll", sentences)
 
-    train(sentences)
+    # train(sentences)
+    parse(sentences)

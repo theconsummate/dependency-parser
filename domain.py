@@ -64,10 +64,11 @@ class State():
         # init stack and add root token to it
         self.stack = [0]
         # arrays of size n for heads and labels
-        self.heads = [None] * (n - 1)
-        self.labels = [None] * (n - 1)
+        self.heads = [None] * (n)
+        self.labels = [None] * (n)
         self.lefts = []
         self.rights = []
+
 
 
     def __add__(self, head, dependent, label=None):
@@ -76,6 +77,8 @@ class State():
 
 
     def set_gold_heads(self, tokens):
+        # set head of root token
+        self.heads[0] = -1
         # it is assumed that this tokens array does not have the root token
         for i in range(len(tokens)):
             self.heads[i] = tokens[i].head
