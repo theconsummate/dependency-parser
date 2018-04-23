@@ -66,8 +66,8 @@ class State():
         # arrays of size n for heads and labels
         self.heads = [None] * (n)
         self.labels = [None] * (n)
-        self.lefts = []
-        self.rights = []
+        self.lefts = [[]] * n
+        self.rights = [[]] * n
 
 
 
@@ -96,17 +96,21 @@ class State():
         # arc is from head to dependent
         # dependent < head required
         if head < dependent:
-            raise ValueError('State#addLeftArc: head index should be less than the dependent index')
+            pass
+            # print self.heads
+            # print head
+            # print dependent
+            raise ValueError('State#addLeftArc: head index should be more than the dependent index')
         self.rights[head].append(dependent)
-        self.__add__(self, head, dependent, label)
+        self.__add__(head, dependent, label)
 
     def addRightArc(self, head, dependent, label=None):
         # arc is from head to dependent
         # head < dependent required
         if head > dependent:
-            raise ValueError('State#addRightArc: head index should be more than the dependent index')
+            raise ValueError('State#addRightArc: head index should be less than the dependent index')
         self.lefts[head].append(dependent)
-        self.__add__(self, head, dependent, label)
+        self.__add__(head, dependent, label)
 
     def arc_standard_oracle(self, stack_top, buffer_top):
         if self.heads[stack_top] == buffer_top:
@@ -127,12 +131,18 @@ class State():
             # pop the last element of stack and add an arc.
             if self.stack[-1] == 0:
                 # top of stack is root
-                raise ValueError("State#arc_standard_transition:top of stack is root, can not create left arc")
-            addLeftArc(self, self.stack.pop(), self.buffer[0])
-        elif action == LEFT:
+                # raise ValueError("State#arc_standard_transition:top of stack is root, can not create left arc")
+                # do shift instead
+                self.shift()
+            elif self.stack[-1] < self.buffer[0]:
+                # head is less than dependent
+                self.shift()
+            else:
+                self.addLeftArc(self.stack.pop(), self.buffer[0])
+        elif action == RIGHT:
             # pop the last element of stack and first element of the buffer and add an arc.
             stack_top = self.stack.pop()
-            addRightArc(self, self.stack.pop(), self.buffer.pop(0))
+            self.addRightArc(stack_top, self.buffer.pop(0))
             # add the stack_top to the first position in the buffer
             self.buffer.insert(0, stack_top)
         else:
