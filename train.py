@@ -51,7 +51,7 @@ def parse(sentences):
     perceptron = Perceptron(ACTIONS)
     perceptron.load(MODEL_FILENAME)
 
-    for sentence in sentences[:1]:
+    for sentence in sentences[:10]:
         for token in sentence.tokens:
             print token
         n = len(sentence.tokens)
@@ -62,9 +62,9 @@ def parse(sentences):
             features = extract_features(state, sentence.tokens)
             # get action from model
             action = perceptron.predicted_class(features)
-            print action
+            # print action
             state.arc_standard_transition(action)
-            print state.heads
+            # print state.heads
 
         print state.heads
 
