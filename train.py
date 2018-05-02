@@ -23,9 +23,8 @@ def train(sentences):
             n = len(sentence.tokens)
             state = State(n)
             # set the gold heads
-            # skip the root token while calling this function.
             # print("setting gold heads")
-            state.set_gold_heads(sentence.tokens[1:])
+            state.set_gold_heads(sentence.tokens)
             # keep looping till parsing is complete
 
             while not state.is_terminal():
@@ -69,6 +68,34 @@ def parse(sentences):
         print state.heads
 
 
+def test(sentences):
+    for sentence in sentences:
+        print("learn the gold sequence of moves from the oracle")
+        moves = []
+        n = len(sentence.tokens)
+        state = State(n)
+        state.set_gold_heads(sentence.tokens)
+        print "gold heads"
+        print state.heads
+        print (state.stack, state.buffer)
+        while not state.is_terminal():
+            gold = state.get_gold_move_from_oracle()
+            moves.append(gold)
+            state.arc_standard_transition(gold)
+            print (state.stack, state.buffer)
+            print state.heads
+        print moves
+
+        # print "reset state and apply these moves"
+        # state = State(n)
+        # for move in moves:
+        #     state.arc_standard_transition(move)
+        #     print (state.stack, state.buffer)
+        #     print state.heads
+        # # print state.heads
+
+
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -85,5 +112,6 @@ if __name__ == '__main__':
     sentences = io.load_conll_file(args.train_file)
     # io.write_conll_file("out.conll", sentences)
 
-    # train(sentences)
-    parse(sentences)
+    # train(sentences[:10])
+    # parse(sentences)
+    test(sentences[:10])
