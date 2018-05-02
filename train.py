@@ -9,7 +9,7 @@ ACTIONS = (SHIFT, RIGHT, LEFT)
 
 MODEL_FILENAME = "model.pickle"
 
-NUM_ITERS = 100
+NUM_ITERS = 10
 
 def train(sentences):
     # init Perceptron
@@ -55,7 +55,6 @@ def parse(sentences):
             print token
         n = len(sentence.tokens)
         state = State(n)
-        print state.heads
 
         while not state.is_terminal():
             features = extract_features(state, sentence.tokens)
@@ -86,13 +85,13 @@ def test(sentences):
             print state.heads
         print moves
 
-        # print "reset state and apply these moves"
-        # state = State(n)
-        # for move in moves:
-        #     state.arc_standard_transition(move)
-        #     print (state.stack, state.buffer)
-        #     print state.heads
-        # # print state.heads
+        print "reset state and apply these moves"
+        state = State(n)
+        for move in moves:
+            state.arc_standard_transition(move)
+            print (state.stack, state.buffer)
+            print state.heads
+        # print state.heads
 
 
 
@@ -112,6 +111,6 @@ if __name__ == '__main__':
     sentences = io.load_conll_file(args.train_file)
     # io.write_conll_file("out.conll", sentences)
 
-    # train(sentences[:10])
-    # parse(sentences)
-    test(sentences[:10])
+    # train(sentences)
+    parse(sentences)
+    # test(sentences[:10])

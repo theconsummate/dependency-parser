@@ -68,6 +68,8 @@ class State():
         self.labels = [None] * (n)
         self.lefts = [[]] * n
         self.rights = [[]] * n
+        # add the head of root as -1
+        self.heads[0] = -1
 
 
 
@@ -97,8 +99,8 @@ class State():
         # head > dependent required
         if head < dependent:
             # print self.heads
-            print head
-            print dependent
+            # print head
+            # print dependent
             raise ValueError('State#addLeftArc: head index should be more than the dependent index')
         self.rights[head].append(dependent)
         self.__add__(head, dependent, label)
@@ -108,7 +110,6 @@ class State():
         # head < dependent required
         if head > dependent:
             raise ValueError('State#addRightArc: head index should be less than the dependent index')
-        print "here"
         self.lefts[head].append(dependent)
         self.__add__(head, dependent, label)
     
@@ -132,7 +133,7 @@ class State():
         return self.arc_standard_oracle(self.stack[-1], self.buffer[0])
 
     def arc_standard_transition(self, action):
-        print "transtition ############ " + str(action)
+        # print "transtition ############ " + str(action)
         if action == LEFT:
             # pop the first element of buffer and add an arc.
             if self.stack[-1] == 0:
@@ -142,7 +143,6 @@ class State():
                 self.shift()
             # elif self.stack[-1] < self.buffer[0]:
             #     # head is less than dependent
-            #     print "mmmmmmmmmm"
             #     self.shift()
             else:
                 self.addLeftArc(self.buffer[0], self.stack.pop())
