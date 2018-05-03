@@ -51,8 +51,6 @@ def parse(sentences):
     perceptron.load(MODEL_FILENAME)
 
     for sentence in sentences[:10]:
-        for token in sentence.tokens:
-            print token
         n = len(sentence.tokens)
         state = State(n)
 
@@ -62,9 +60,11 @@ def parse(sentences):
             action = perceptron.predicted_class(features)
             # print action
             state.arc_standard_transition(action)
-            # print state.heads
+            print state.heads
 
-        print state.heads
+        sentence.set_heads(state.heads)
+    
+    io.write_conll_file("out.conll", sentences)
 
 
 def test(sentences):
@@ -99,6 +99,7 @@ def test(sentences):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--train_file', required=True)
+    parser.add_argument('--train_mode', action="store_true", default=False)
 
     # parser.add_argument('-a', action="store_true", default=False)
     # parser.add_argument('-b', action="store", dest="b")
@@ -111,6 +112,9 @@ if __name__ == '__main__':
     sentences = io.load_conll_file(args.train_file)
     # io.write_conll_file("out.conll", sentences)
 
-    # train(sentences)
-    parse(sentences)
+    if args.train_mode:
+        train(sentences)
+    else:
+        # by default we will always parse
+        parse(sentences)
     # test(sentences[:10])

@@ -15,7 +15,10 @@ class Token():
         self.upos = items[3]
         self.xpos = items[4] # not in use
         self.feats = items[5] # not in use
-        self.head = int(items[6])
+        try:
+            self.head = int(items[6])
+        except ValueError:
+            self.head = None
         self.deprel = items[7]
         self.deps = items[8] # not in use
         self.misc = items[9] # not in use
@@ -49,6 +52,12 @@ class Sentence():
         for token in self.tokens[1:]:
             string += token.print_conll_format() + "\n"
         return string.strip()
+
+    def set_heads(self, heads):
+        if not len(heads) == len(self.tokens):
+            raise ValueError('Sentence#set_heads: length of input heads array not equal to the number of tokens')
+        for t, h in zip(self.tokens, heads):
+            t.head = h
 
 
 class State():
