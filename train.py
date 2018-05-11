@@ -79,7 +79,7 @@ def parse(sentences, model_file):
             action = perceptron.predicted_class(features)
             # print action
             state.arc_standard_transition(action)
-            print state.heads
+            # print state.heads
 
         sentence.set_heads(state.heads)
 
