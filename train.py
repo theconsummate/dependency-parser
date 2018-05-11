@@ -1,11 +1,34 @@
 import argparse
-import io
-from domain import State
+from domain import Token, Sentence, State
 from features import extract_features
 from classifier import Perceptron
 
 SHIFT = 0; RIGHT = 1; LEFT = 2;
 ACTIONS = (SHIFT, RIGHT, LEFT)
+
+def load_conll_file(file):
+    f = open(file)
+    sentences = []
+    tokens = [Token.get_root_token()]
+    for line in f.readlines():
+        # remove the new line char first
+        line = line.strip()
+        if line == "":
+            # the sentence has ended
+            sentences.append(Sentence(tokens))
+            tokens = [Token.get_root_token()]
+        else:
+            token = Token(line)
+            tokens.append(token)
+    return sentences
+
+
+def write_conll_file(file, sentences):
+    f = open(file, 'w')
+    for sentence in sentences:
+        f.write(sentence.print_conll_format() + "\n\n")
+    f.close()
+
 
 def train(sentences, num_iters, model_file):
     # init Perceptron
@@ -60,7 +83,7 @@ def parse(sentences, model_file):
 
         sentence.set_heads(state.heads)
 
-    io.write_conll_file("out.conll", sentences)
+    write_conll_file("out.conll", sentences)
 
 
 def test(sentences):
@@ -107,7 +130,7 @@ if __name__ == '__main__':
     # for sentence in io.load_conll_file(args.train_file):
     #     print sentence.print_conll_format()
     #     print "---"
-    sentences = io.load_conll_file(args.train_file)
+    sentences = load_conll_file(args.train_file)
     # io.write_conll_file("out.conll", sentences)
 
     if args.train_mode:
