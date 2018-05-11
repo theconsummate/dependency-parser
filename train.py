@@ -69,7 +69,7 @@ def parse(sentences, model_file):
     perceptron = Perceptron(ACTIONS)
     perceptron.load(model_file)
 
-    for sentence in sentences[:10]:
+    for sentence in sentences:
         n = len(sentence.tokens)
         state = State(n)
 
