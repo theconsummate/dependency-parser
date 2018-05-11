@@ -7,16 +7,12 @@ from classifier import Perceptron
 SHIFT = 0; RIGHT = 1; LEFT = 2;
 ACTIONS = (SHIFT, RIGHT, LEFT)
 
-MODEL_FILENAME = "model.pickle"
-
-NUM_ITERS = 10
-
-def train(sentences):
+def train(sentences, num_iters, model_file):
     # init Perceptron
     perceptron = Perceptron(ACTIONS)
 
     print("training starting...")
-    for i in range(NUM_ITERS):
+    for i in range(num_iters):
         print("iteration : " + str(i))
         for sentence in sentences:
             # number of tokens in the sentence
@@ -41,14 +37,14 @@ def train(sentences):
     print("training finished")
 
     # save the model
-    perceptron.save(MODEL_FILENAME)
+    perceptron.save(model_file)
     print("model saved")
 
 
-def parse(sentences):
+def parse(sentences, model_file):
     # load model
     perceptron = Perceptron(ACTIONS)
-    perceptron.load(MODEL_FILENAME)
+    perceptron.load(model_file)
 
     for sentence in sentences[:10]:
         n = len(sentence.tokens)
@@ -63,7 +59,7 @@ def parse(sentences):
             print state.heads
 
         sentence.set_heads(state.heads)
-    
+
     io.write_conll_file("out.conll", sentences)
 
 
@@ -99,7 +95,9 @@ def test(sentences):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--train_file', required=True)
+    parser.add_argument('--model_file', required=True)
     parser.add_argument('--train_mode', action="store_true", default=False)
+    parser.add_argument('--num_iters', action="store", type=int, default=10)
 
     # parser.add_argument('-a', action="store_true", default=False)
     # parser.add_argument('-b', action="store", dest="b")
@@ -113,8 +111,8 @@ if __name__ == '__main__':
     # io.write_conll_file("out.conll", sentences)
 
     if args.train_mode:
-        train(sentences)
+        train(sentences, args.num_iters, args.model_file)
     else:
         # by default we will always parse
-        parse(sentences)
+        parse(sentences, args.model_file)
     # test(sentences[:10])

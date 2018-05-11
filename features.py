@@ -43,7 +43,7 @@ def extract_features(state, tokens):
         features['b2_f_p=%s' % (b2.form + b2.upos)] = 1
         features['b2_f=%s' % b2.form] = 1
         features['b2_p=%s' % b2.upos] = 1
-    
+
 
     # word pairs
     # S[0]-form,pos+B[0]-form,pos; S[0]-form,pos+B[0]-form;
@@ -59,9 +59,9 @@ def extract_features(state, tokens):
         features['s0_p+b0_f_p=%s' % (s0.upos + b0.form + b0.upos)] = 1
         features['s0_f_p+b0_f=%s' % (s0.form + b0.form)] = 1
         features['s0_p+b0_p=%s' % (s0.upos + b0.upos)] = 1
-        
+
         # add three words
-        features['b0_p+b1_p+b2_p=%s' % (b0.upos + b1.upos + b2.upos)] = 1
+        # features['b0_p+b1_p+b2_p=%s' % (b0.upos + b1.upos + b2.upos)] = 1
 
     if b0 and b1:
         features['b0_p+b1_p=%s' % (b0.upos + b1.upos)] = 1
@@ -73,7 +73,7 @@ def extract_features(state, tokens):
 
     if b0 and b1 and b2:
         features['b0_p+b1_p+b2_p=%s' % (b0.upos + b1.upos + b2.upos)] = 1
-    
+
     if b0 and b1 and s0:
         features['b0_p+b1_p+s0_p=%s' % (b0.upos + b1.upos + s0.upos)] = 1
 
