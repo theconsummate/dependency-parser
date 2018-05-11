@@ -70,15 +70,35 @@ def parse(sentences, model_file):
     perceptron.load(model_file)
 
     for sentence in sentences:
+        # print sentence
         n = len(sentence.tokens)
         state = State(n)
 
         while not state.is_terminal():
+            # print state.stack
+            # print state.buffer
             features = extract_features(state, sentence.tokens)
             # get action from model
             action = perceptron.predicted_class(features)
             # print action
-            state.arc_standard_transition(action)
+            # print "####"
+            # the action is just what the model says
+            # apply it intelligently based on what the state is
+
+            # if stack length is less than
+            if action == SHIFT or len(state.stack) < 2:
+                new_action = SHIFT
+            elif action == LEFT and state.stack[-2] != -1:
+                new_action = LEFT
+            elif action == RIGHT and not(state.stack[-2] == -1 and len(state.buffer) != 0):
+                new_action = RIGHT
+            elif state.buffer_len() > 0:
+                new_action = SHIFT
+            else:
+                new_action = RIGHT
+            #
+            # print new_action
+            state.arc_standard_transition(new_action)
             # print state.heads
 
         sentence.set_heads(state.heads)
