@@ -1,7 +1,7 @@
 import argparse
 from domain import Token, Sentence, State
 from features import extract_features
-from classifier import Perceptron
+from classifier import Perceptron, AveragedPerceptron
 
 SHIFT = 0; RIGHT = 1; LEFT = 2;
 ACTIONS = (SHIFT, RIGHT, LEFT)
@@ -32,8 +32,9 @@ def write_conll_file(file, sentences):
 
 def train(sentences, num_iters, model_file):
     # init Perceptron
-    perceptron = Perceptron(ACTIONS)
-
+    # perceptron = Perceptron(ACTIONS)
+    perceptron = AveragedPerceptron(ACTIONS)
+    
     print("training starting...")
     for i in range(num_iters):
         print("iteration : " + str(i))
@@ -58,6 +59,10 @@ def train(sentences, num_iters, model_file):
 
     # training is finished
     print("training finished")
+
+    # do average
+    print("averaging...")
+    perceptron.average_weights()
 
     # save the model
     perceptron.save(model_file)
