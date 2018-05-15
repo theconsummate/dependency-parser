@@ -75,8 +75,8 @@ class State():
         # arrays of size n for heads and labels
         self.heads = [None] * (n)
         self.labels = [None] * (n)
-        self.lefts = [[]] * n
-        self.rights = [[]] * n
+        self.lefts = [list() for x in range(n)]
+        self.rights = [list() for x in range(n)]
         # add the head of root as -1
         self.heads[0] = -1
 

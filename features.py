@@ -5,15 +5,30 @@ def extract_features(state, tokens):
     features = {}
     features['bias'] = 1
 
-    # get s0
+    # get s0, it's head, left dependent and right dependent if any
     s0 = None
+    hs0 = None
+    lds0 = None
+    rds0 = None
     if len(state.stack) > 0:
-        s0 = tokens[state.stack[-1]]
+        stack_index = state.stack[-1]
+        s0 = tokens[stack_index]
+        # check if the stack already has a head or not.
+        if state.heads[stack_index]:
+            hs0 = tokens[state.heads[stack_index]]
+        # check for ld, take the first one if present
+        if len(state.lefts[stack_index]) > 0:
+            lds0 = tokens[state.lefts[stack_index][0]]
+        # check for rd, take the first one if present
+        if len(state.rights[stack_index]) > 0:
+            rds0 = tokens[state.rights[stack_index][0]]
 
     # get buffer tokens
     b0 = None
     b1 = None
     b2 = None
+    ldb0 = None
+
     if len(state.buffer) > 2:
         b0 = tokens[state.buffer[0]]
         b1 = tokens[state.buffer[1]]
@@ -23,6 +38,12 @@ def extract_features(state, tokens):
         b1 = tokens[state.buffer[1]]
     elif len(state.buffer) > 0:
         b0 = tokens[state.buffer[0]]
+    
+    # add ldb0
+    if b0:
+        # check for ld, take the first one if present
+        if len(state.lefts[state.buffer[0]]) > 0:
+            ldb0 = tokens[state.lefts[state.buffer[0]][0]]
 
     # now we have s0, b0, b1, b2
     # add unigrams
@@ -60,9 +81,6 @@ def extract_features(state, tokens):
         features['s0_f_p+b0_f=%s' % (s0.form + b0.form)] = 1
         features['s0_p+b0_p=%s' % (s0.upos + b0.upos)] = 1
 
-        # add three words
-        # features['b0_p+b1_p+b2_p=%s' % (b0.upos + b1.upos + b2.upos)] = 1
-
     if b0 and b1:
         features['b0_p+b1_p=%s' % (b0.upos + b1.upos)] = 1
 
@@ -77,5 +95,17 @@ def extract_features(state, tokens):
     if b0 and b1 and s0:
         features['b0_p+b1_p+s0_p=%s' % (b0.upos + b1.upos + s0.upos)] = 1
 
+    if hs0 and s0 and b0:
+        features['hs0_p+s0_p+b0_p=%s' % (hs0.upos + s0.upos + b0.upos)] = 1
+    
+    if lds0 and s0 and b0:
+        features['lds0_p+s0_p+b0_p=%s' % (lds0.upos + s0.upos + b0.upos)] = 1
+    
+    if rds0 and s0 and b0:
+        features['rds0_p+s0_p+b0_p=%s' % (rds0.upos + s0.upos + b0.upos)] = 1
+    
+    if ldb0 and s0 and b0:
+        features['ldb0_p+s0_p+b0_p=%s' % (ldb0.upos + s0.upos + b0.upos)] = 1
+    
     return features
 
