@@ -95,17 +95,17 @@ def extract_features(state, tokens):
     if b0 and b1 and s0:
         features['b0_p+b1_p+s0_p=%s' % (b0.upos + b1.upos + s0.upos)] = 1
 
-    if hs0 and s0 and b0:
-        features['hs0_p+s0_p+b0_p=%s' % (hs0.upos + s0.upos + b0.upos)] = 1
+    # if hs0 and s0 and b0:
+    #     features['hs0_p+s0_p+b0_p=%s' % (hs0.upos + s0.upos + b0.upos)] = 1
     
-    if lds0 and s0 and b0:
-        features['lds0_p+s0_p+b0_p=%s' % (lds0.upos + s0.upos + b0.upos)] = 1
+    # if lds0 and s0 and b0:
+    #     features['lds0_p+s0_p+b0_p=%s' % (lds0.upos + s0.upos + b0.upos)] = 1
     
-    if rds0 and s0 and b0:
-        features['rds0_p+s0_p+b0_p=%s' % (rds0.upos + s0.upos + b0.upos)] = 1
+    # if rds0 and s0 and b0:
+    #     features['rds0_p+s0_p+b0_p=%s' % (rds0.upos + s0.upos + b0.upos)] = 1
     
-    if ldb0 and s0 and b0:
-        features['ldb0_p+s0_p+b0_p=%s' % (ldb0.upos + s0.upos + b0.upos)] = 1
+    # if ldb0 and s0 and b0:
+    #     features['ldb0_p+s0_p+b0_p=%s' % (ldb0.upos + s0.upos + b0.upos)] = 1
     
     return features
 

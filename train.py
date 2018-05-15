@@ -140,7 +140,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_file', required=True)
     parser.add_argument('--model_file', required=True)
     parser.add_argument('--train_mode', action="store_true", default=False)
-    parser.add_argument('--num_iters', action="store", type=int, default=10)
+    parser.add_argument('--num_iters', action="store", type=int, default=15)
 
     # parser.add_argument('-a', action="store_true", default=False)
     # parser.add_argument('-b', action="store", dest="b")
