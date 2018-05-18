@@ -1,6 +1,11 @@
 # my gitignore
 data/*
 slides/*
+*.pickle
+*.model
+bin/*
+*.conll
+*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

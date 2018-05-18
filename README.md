@@ -1,5 +1,9 @@
 # dependency-parser
+
+Urls or Webpages referred:
+
 https://explosion.ai/blog/parsing-english-in-python
+
 https://gist.github.com/syllog1sm/10343947
 
 https://explosion.ai/blog/part-of-speech-pos-tagger-in-python
