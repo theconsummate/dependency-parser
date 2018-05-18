@@ -81,12 +81,16 @@ class State():
         self.heads[0] = -1
 
 
-
+    """
+    internal method, adds an arc to the state.
+    """
     def __add__(self, head, dependent, label=None):
         self.heads[dependent] = head
         self.labels[dependent] = label
 
-
+    """
+    fills up the heads array. this should only be used during training to load the gold arcs.
+    """
     def set_gold_heads(self, tokens):
         # set head of root token
         # self.heads[0] = -1
@@ -103,6 +107,10 @@ class State():
             raise ValueError('State#shift: buffer should have atleast 2 elements when stack is not empty')
         self.stack.append(self.buffer.pop(0))
 
+
+    """
+    adds a Left Arc
+    """
     def addLeftArc(self, head, dependent, label=None):
         # arc is from head to dependent
         # head > dependent required
@@ -114,6 +122,10 @@ class State():
         self.rights[head].append(dependent)
         self.__add__(head, dependent, label)
 
+
+    """
+    adds a right Arc
+    """
     def addRightArc(self, head, dependent, label=None):
         # arc is from head to dependent
         # head < dependent required
@@ -121,12 +133,21 @@ class State():
             raise ValueError('State#addRightArc: head index should be less than the dependent index')
         self.lefts[head].append(dependent)
         self.__add__(head, dependent, label)
-    
+
+
+    """
+    A function to check, whether a token has collected all its dependents before it is assigned as a right dependent of another token.
+    Only used during training while determining the next correct transition from oracle.
+    """    
     def has_all_children(self, buffer_top):
         if buffer_top in [self.heads[index] for index in self.buffer]:
             return False
         return True
 
+
+    """
+    An Arc Standard Oracle, Joakim and Nivre
+    """
     def arc_standard_oracle(self, stack_top, buffer_top):
         if self.heads[stack_top] == buffer_top:
             return LEFT
@@ -136,11 +157,18 @@ class State():
             return SHIFT
 
 
+    """
+    Performs sanity checks, queries the oracle and returns the next transition.
+    """
     def get_gold_move_from_oracle(self):
         if len(self.stack) == 0:
             return SHIFT
         return self.arc_standard_oracle(self.stack[-1], self.buffer[0])
 
+
+    """
+    Applies a given transition to this state object.
+    """
     def arc_standard_transition(self, action):
         # print "transtition ############ " + str(action)
         if action == LEFT:
@@ -165,6 +193,9 @@ class State():
             self.shift()
 
 
+    """
+    determines whether the current state is terminal or not/
+    """
     def is_terminal(self):
         if len(self.buffer) == 0:
             return True
