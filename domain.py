@@ -27,11 +27,17 @@ class Token():
         return "{id=" + str(self.id) + ",form=" + self.form + ",head=" + str(self.head) + ",deprel=" + self.deprel + "}"
 
     def print_conll_format(self):
+        if not self.head:
+            self.head = -1
         return str(self.id) + "\t" + self.form + "\t" + self.lemma + "\t" + self.upos + "\t" + self.xpos + "\t" + self.feats + "\t" + str(self.head) + "\t" + self.deprel + "\t" + self.deps + "\t" + self.misc
 
     @staticmethod
     def get_root_token():
         return Token("0\t<ROOT>\t<ROOT>\t<ROOT>\t_\t_\t-1\tROOT\t_\t_")
+    
+    @staticmethod
+    def get_empty_token():
+        return Token("-1\t<EMPTY>\t<EMPTY>\t<EMPTY>\t_\t_\t-1\tEMPTY\t_\t_")
 
 
 """

@@ -1,3 +1,5 @@
+from domain import Token
+
 """
 convert state into features
 """
@@ -44,6 +46,11 @@ def extract_features(state, tokens):
         # check for ld, take the first one if present
         if len(state.lefts[state.buffer[0]]) > 0:
             ldb0 = tokens[state.lefts[state.buffer[0]][0]]
+
+    # if s0 is None, add it as empty.
+    if not s0:
+        s0 = Token.get_empty_token()
+
 
     # now we have s0, b0, b1, b2
     # add unigrams
