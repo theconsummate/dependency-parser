@@ -34,7 +34,7 @@ def train(sentences, num_iters, model_file):
     # init Perceptron
     # perceptron = Perceptron(ACTIONS)
     perceptron = AveragedPerceptron(ACTIONS)
-    
+
     print("training starting...")
     for i in range(num_iters):
         print("iteration : " + str(i))
@@ -90,21 +90,24 @@ def parse(sentences, model_file):
             # the action is just what the model says
             # apply it intelligently based on what the state is
 
+            #  if prediction is X and satisfies precondition for X, then do X, and if none of the transition satisfies its precondition, then there is something wrong.
+
             # if stack length is less than
-            if action == SHIFT or len(state.stack) < 2:
-                new_action = SHIFT
-            elif action == LEFT and state.stack[-2] != -1:
-                new_action = LEFT
-            elif action == RIGHT and not(state.stack[-2] == -1 and len(state.buffer) != 0):
-                new_action = RIGHT
-            elif state.buffer_len() > 0:
-                new_action = SHIFT
-            else:
-                new_action = RIGHT
-            #
+            # if action == SHIFT or len(state.stack) < 2:
+            #     new_action = SHIFT
+            # if action == LEFT and state.stack[-2] != 0:
+            #     new_action = LEFT
+            # elif action == RIGHT and not(state.stack[-2] == 0 and len(state.buffer) != 0):
+            #     new_action = RIGHT
+            # # elif state.buffer_len() > 0:
+            # #     new_action = SHIFT
+            # else:
+            #     new_action = SHIFT
+            # #
             # print new_action
-            state.arc_standard_transition(new_action)
+            state.arc_standard_transition(action)
             # print state.heads
+            # print "\n"
 
         sentence.set_heads(state.heads)
 

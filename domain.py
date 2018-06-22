@@ -34,7 +34,7 @@ class Token():
     @staticmethod
     def get_root_token():
         return Token("0\t<ROOT>\t<ROOT>\t<ROOT>\t_\t_\t-1\tROOT\t_\t_")
-    
+
     @staticmethod
     def get_empty_token():
         return Token("-1\t<EMPTY>\t<EMPTY>\t<EMPTY>\t_\t_\t-1\tEMPTY\t_\t_")
@@ -144,7 +144,7 @@ class State():
     """
     A function to check, whether a token has collected all its dependents before it is assigned as a right dependent of another token.
     Only used during training while determining the next correct transition from oracle.
-    """    
+    """
     def has_all_children(self, buffer_top):
         if buffer_top in [self.heads[index] for index in self.buffer]:
             return False
@@ -191,6 +191,8 @@ class State():
                 self.addLeftArc(self.buffer[0], self.stack.pop())
         elif action == RIGHT:
             # pop the last element of stack and first element of the buffer and add an arc.
+            if not (len(self.stack) > 0 and len(self.buffer) > 0):
+                self.shift()
             stack_top = self.stack.pop()
             self.addRightArc(stack_top, self.buffer.pop(0))
             # add the stack_top to the first position in the buffer
