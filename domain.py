@@ -27,8 +27,8 @@ class Token():
         return "{id=" + str(self.id) + ",form=" + self.form + ",head=" + str(self.head) + ",deprel=" + self.deprel + "}"
 
     def print_conll_format(self):
-        # if not self.head:
-        #     self.head = -1
+        if self.head == None:
+            self.head = -1
         return str(self.id) + "\t" + self.form + "\t" + self.lemma + "\t" + self.upos + "\t" + self.xpos + "\t" + self.feats + "\t" + str(self.head) + "\t" + self.deprel + "\t" + self.deps + "\t" + self.misc
 
     @staticmethod
